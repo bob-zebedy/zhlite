@@ -1,19 +1,16 @@
 # -*- coding: UTF-8 -*-
 import setuptools
+from zhlite import __version__, __author__, __email__
 
-with open("README.md", "r", encoding='utf8') as f:
-    long_description = f.read()
 
 setuptools.setup(
     name="zhlite",
-    version="1.2.0",
-    author="zhangbo",
-    author_email="deplives@deplives.com",
+    version=__version__,
+    author=__author__,
+    author_email=__email__,
     description="zhihu lite client",
-    long_description=long_description,
     license="MIT",
-    long_description_content_type="text/markdown",
-    url="https://github.com/deplives/zhihu",
+    url="https://github.com/deplives/zhlite",
     packages=['zhlite'],
     install_requires=[
         'requests==2.21.0',
@@ -22,9 +19,10 @@ setuptools.setup(
         'PyExecJS==1.5.1',
         'Pillow==6.0.0'
     ],
-    classifiers=(
+    classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ),
+    ]
+
 )

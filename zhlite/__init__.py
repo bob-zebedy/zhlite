@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "4.1.0"
-__date__ = "2019-08-10"
-__release__ = "release message"
+__version__ = "1.1.0"
+__date__ = "2019-08-11"
+__release__ = "release 1.1.0"
 
 
 class Version(object):
