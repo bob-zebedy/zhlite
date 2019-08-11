@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import getpass
 import hashlib
 import hmac
 import json
@@ -78,7 +79,7 @@ class Oauth(object):
             "ref_source": "homepage",
             "utm_source": "",
             "username": input("手机: +86 "),
-            "password": input("密码: "),
+            "password": getpass.getpass("密码: "),
         }
 
         timestamp = self.__gettimestamp__()
@@ -234,13 +235,9 @@ class User(Oauth):
             "headline": "",                             # 个人简介
             "is_vip": "",                               # 盐选会员
             "follower_count": "",                       # 关注者数量
-            "followers": "",                            # 关注者
             "following_count": "",                      # 关注的人数量
-            "followings": "",                           # 关注的人
             "answer_count": "",                         # 回答数量
-            "answers": "",                              # 回答
             "question_count": "",                       # 提问数量
-            "questions": "",                            # 提问
             "article_count": "",                        # 文章数量
             "voteup_count": "",                         # 获得赞同数量
             "visit_count": ""                           # 来访者数量
@@ -282,12 +279,8 @@ class User(Oauth):
                     "headline": info["headline"],
                     "is_vip": info["vip_info"]["is_vip"],
                     "follower_count": info["follower_count"],
-                    "followers": self.followers(),
-                    "followings": self.followings(),
                     "following_count": info["following_count"],
                     "answer_count": info["answer_count"],
-                    "answers": self.answers(),
-                    "questions": self.questions(),
                     "question_count": info["question_count"],
                     "article_count": info["articles_count"],
                     "voteup_count": info["voteup_count"],
@@ -298,6 +291,7 @@ class User(Oauth):
                     "name": "[已注销]"
                 })
 
+    @property
     def followers(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/followers"
         offset = 0
@@ -321,6 +315,7 @@ class User(Oauth):
 
             yield User(info["data"][0]["url_token"])
 
+    @property
     def followings(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/followees"
         offset = 0
@@ -344,6 +339,7 @@ class User(Oauth):
 
             yield User(info["data"][0]["url_token"])
 
+    @property
     def answers(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/answers"
         offset = 0
@@ -367,6 +363,7 @@ class User(Oauth):
 
             yield Answer(info["data"][0]["id"])
 
+    @property
     def questions(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/questions"
         offset = 0

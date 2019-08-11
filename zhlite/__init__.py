@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __date__ = "2019-08-11"
-__release__ = "release 1.1.0"
+__release__ = "release 1.1.1"
 
 
 class Version(object):
@@ -26,4 +26,3 @@ class Version(object):
 
 
 version = Version()
-oauth = Oauth()

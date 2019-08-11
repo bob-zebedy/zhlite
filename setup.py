@@ -2,6 +2,8 @@
 import setuptools
 from zhlite import __version__, __author__, __email__
 
+with open("README.md", "r", encoding='utf8') as f:
+    long_description = f.read()
 
 setuptools.setup(
     name="zhlite",
@@ -9,6 +11,8 @@ setuptools.setup(
     author=__author__,
     author_email=__email__,
     description="zhihu lite client",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     license="MIT",
     url="https://github.com/deplives/zhlite",
     packages=['zhlite'],
