@@ -167,7 +167,7 @@ class Oauth(object):
         return False
 
     @property
-    def mine(self):
+    def profile(self):
         api = "https://www.zhihu.com/api/v4/me"
         payloads = {
             "include": "follower_count,following_count,answer_count,question_count,articles_count,voteup_count,visits_count"

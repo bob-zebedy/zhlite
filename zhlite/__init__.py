@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __date__ = "2019-08-12"
-__release__ = "修复 v1.2.0 视频下载的bug"
+__release__ = "重命名 Oauth.mine 为 Oauth.profile "
 
 
 class Version(object):
