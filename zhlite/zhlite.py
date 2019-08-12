@@ -234,7 +234,7 @@ class Oauth(object):
                 return info['playlist']['LD']['play_url'], info['title'], info['playlist']['LD']['format']
             else:
                 return
-        except Exception as e:
+        except Exception:
             return
 
 
@@ -273,7 +273,7 @@ class User(Oauth):
 
     def __eq__(self, anouser):
         if isinstance(anouser, User):
-            if self and anonymous:
+            if self and anouser:
                 return self.info["id"] == anouser.info["id"]
             else:
                 return False
@@ -281,7 +281,7 @@ class User(Oauth):
             raise TypeError("A non-User Object")
 
     def __bool__(self):
-        return True if self.__uid__ not in self.__anonymous__ else False
+        return True if self.ids not in self.anonymous else False
 
     def __getinfo__(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.ids}"
@@ -457,8 +457,8 @@ class Answer(Oauth):
     def save(self, typed="all", path=None):
         if not path:
             path = os.path.join(
-                str(self.question.id)+"_"+self.question.title,
-                str(self.id)
+                str(self.info["question"].id)+"_"+self.info["question"].title,
+                str(self.info["id"])
             )
             try:
                 os.makedirs(path)
@@ -486,11 +486,13 @@ class Answer(Oauth):
                 if vd.has_attr("href"):
                     urlinfo = self.__videoinfo__(vd["href"])
                     data = self.__download__(urlinfo[0])
-                    if urlinfo[1] is None:
+                    if urlinfo[1] is None or urlinfo[1] == "":
                         filename = "".join((str(self.__gettimestamp__()), ".", urlinfo[-1]))
-                        with open(os.path.join(path, filename), "wb") as f:
-                            print(f.name)
-                            f.write(data)
+                    else:
+                        filename = "".join((urlinfo[1], ".", urlinfo[-1]))
+                    with open(os.path.join(path, filename), "wb") as f:
+                        print(f.name)
+                        f.write(data)
 
         if typed == "picture":
             downpic()
