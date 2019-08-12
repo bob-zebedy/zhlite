@@ -21,7 +21,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
  - [x] 以登陆用户的身份访问问题
  - [x] 以登录用户的身份访问回答
  - [x] 批量下载回答中的图片
- - [ ] 批量下载回答中的视频
+ - [x] 批量下载回答中的视频
  - [ ] 获取回答的评论
 # 安装
 `pip3 install zhlite`
@@ -90,7 +90,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | created | datetime | 回答时间 |
 | updated | datetime | 最后一次修改时间 |
 | question | Question Object | 对应的问题 |
-| save_media() | method | 保存回答的所有图片 |
+| save() | method | 保存回答中的图片和视频 |
 
 # 使用
 

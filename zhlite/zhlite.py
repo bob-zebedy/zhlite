@@ -14,6 +14,7 @@ from datetime import datetime
 from http import cookiejar
 from random import random
 from time import sleep, time
+from urllib import parse
 from urllib.parse import urlencode
 
 import execjs
@@ -188,9 +189,12 @@ class Oauth(object):
             raise e
 
     def __download__(self, url):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
+        }
         try:
             sleep(random())
-            response = requests.get(url)
+            response = requests.get(url, headers=headers, stream=True)
             if response.status_code == 200:
                 return response.content
             else:
@@ -211,6 +215,27 @@ class Oauth(object):
     def __html2text__(self, html):
         pattern = re.compile(r"<.*?>")
         return pattern.sub("", html)
+
+    def __videoinfo__(self, url):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
+        }
+        param = parse.parse_qs(parse.urlparse(url).query)
+        target = param['target'][0]
+        videoid = target.split(r'/')[-1]
+        try:
+            response = requests.get(f"https://lens.zhihu.com/api/v4/videos/{videoid}", headers=headers)
+            info = json.loads(response.text, encoding="utf-8")
+            if 'HD' in info['playlist']:
+                return info['playlist']['HD']['play_url'], info['title'], info['playlist']['HD']['format']
+            elif 'SD' in info['playlist']:
+                return info['playlist']['SD']['play_url'], info['title'], info['playlist']['SD']['format']
+            elif 'LD' in info['playlist']:
+                return info['playlist']['LD']['play_url'], info['title'], info['playlist']['LD']['format']
+            else:
+                return
+        except Exception as e:
+            return
 
 
 class User(Oauth):
@@ -429,26 +454,54 @@ class Answer(Oauth):
         self.info["updated"] = self.__ut2date__(info["updated_time"])
         self.info["question"] = Question(info["question"]["id"])
 
-    def save_media(self, path=None):
+    def save(self, typed="all", path=None):
         if not path:
             path = os.path.join(
                 str(self.question.id)+"_"+self.question.title,
                 str(self.id)
             )
-        shutil.rmtree(path, ignore_errors=True)
-        os.makedirs(path)
+            try:
+                os.makedirs(path)
+            except Exception:
+                pass
 
-        soup = BeautifulSoup(self.info["content"], "lxml")
-        noscript = soup.find_all("noscript")
+        def downpic():
+            soupic = BeautifulSoup(self.info["content"], "lxml")
+            noscript = soupic.find_all("noscript")
 
-        for imgtag in noscript:
-            if imgtag.img.has_attr("data-original"):
-                url = imgtag.img["data-original"]
-            else:
-                url = imgtag.img["src"]
-            data = self.__download__(url)
-            with open(os.path.join(path, os.path.basename(url)), "wb") as f:
-                f.write(data)
+            for imgtag in noscript:
+                if imgtag.img.has_attr("data-original"):
+                    url = imgtag.img["data-original"]
+                else:
+                    url = imgtag.img["src"]
+                data = self.__download__(url)
+                with open(os.path.join(path, os.path.basename(url)), "wb") as f:
+                    print(f.name)
+                    f.write(data)
+
+        def downvideo():
+            soupvd = BeautifulSoup(self.info["content"], "lxml")
+            vdlink = soupvd.find_all("a", {"class": "video-box"})
+            for vd in vdlink:
+                if vd.has_attr("href"):
+                    urlinfo = self.__videoinfo__(vd["href"])
+                    data = self.__download__(urlinfo[0])
+                    if urlinfo[1] is None:
+                        filename = "".join((str(self.__gettimestamp__()), ".", urlinfo[-1]))
+                        with open(os.path.join(path, filename), "wb") as f:
+                            print(f.name)
+                            f.write(data)
+
+        if typed == "picture":
+            downpic()
+        elif typed == "video":
+            downvideo()
+        elif typed == "all":
+            downpic()
+            downvideo()
+        else:
+            raise ValueError(typed)
+        return
 
 
 class Question(Oauth):
