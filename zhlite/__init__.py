@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.2.0"
+__version__ = "1.2.2"
 __date__ = "2019-08-12"
-__release__ = "删除 Answer.save_media() 方法，新增 Answer.save(typed='picture'|'video'|'all') 支持下载视频"
+__release__ = "修复 v1.2.0 视频下载的bug"
 
 
 class Version(object):
