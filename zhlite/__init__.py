@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.2.3"
-__date__ = "2019-08-12"
-__release__ = "重命名 Oauth.mine 为 Oauth.profile "
+__version__ = "1.3.0"
+__date__ = "2019-08-14"
+__release__ = "新增 ZhliteBase 作为基础父类，其余模块均继承该父类。抽象公共代码"
 
 
 class Version(object):

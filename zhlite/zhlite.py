@@ -42,7 +42,72 @@ class LoginError(Exception):
     pass
 
 
-class Oauth(object):
+class ZhliteBase(object):
+
+    def __addattribute__(self):
+        try:
+            for k, v in self.info.items():
+                self.__dict__[k] = v
+        except Exception:
+            pass
+
+    def __ut2date__(self, ut):
+        return datetime.fromtimestamp(ut).strftime("%Y-%m-%d %H:%M:%S") if ut else "0000-00-00 00:00:00"
+
+    def __html2text__(self, html):
+        pattern = re.compile(r"<.*?>")
+        return pattern.sub("", html)
+
+    def __videoinfo__(self, url):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
+        }
+        param = parse.parse_qs(parse.urlparse(url).query)
+        target = param['target'][0]
+        videoid = target.split(r'/')[-1]
+        try:
+            response = requests.get(f"https://lens.zhihu.com/api/v4/videos/{videoid}", headers=headers)
+            info = json.loads(response.text, encoding="utf-8")
+            if 'HD' in info['playlist']:
+                return info['playlist']['HD']['play_url'], info['title'], info['playlist']['HD']['format']
+            elif 'SD' in info['playlist']:
+                return info['playlist']['SD']['play_url'], info['title'], info['playlist']['SD']['format']
+            elif 'LD' in info['playlist']:
+                return info['playlist']['LD']['play_url'], info['title'], info['playlist']['LD']['format']
+            else:
+                return
+        except Exception:
+            return
+
+    def __download__(self, url):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
+        }
+        try:
+            sleep(random())
+            response = requests.get(url, headers=headers, stream=True)
+            if response.status_code == 200:
+                return response.content
+            else:
+                raise ConnectionError(response.status_code, response.url)
+        except Exception as e:
+            raise e
+
+    def request(self, api, payloads=None):
+        try:
+            # sleep(random())
+            response = self.session.get(api, params=payloads)
+            if response.status_code == 200:
+                return json.loads(response.text, encoding="utf-8")
+            elif response.status_code == 410:
+                return False
+            else:
+                raise ConnectionError(response.status_code, response.url)
+        except Exception as e:
+            raise e
+
+
+class Oauth(ZhliteBase):
     platform = sys.platform
     info = {
         "platform": platform
@@ -175,70 +240,8 @@ class Oauth(object):
         info = self.request(api, payloads)
         return User(info["id"])
 
-    def request(self, api, payloads=None):
-        try:
-            # sleep(random())
-            response = self.session.get(api, params=payloads)
-            if response.status_code == 200:
-                return json.loads(response.text, encoding="utf-8")
-            elif response.status_code == 410:
-                return False
-            else:
-                raise ConnectionError(response.status_code, response.url)
-        except Exception as e:
-            raise e
 
-    def __download__(self, url):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
-        }
-        try:
-            sleep(random())
-            response = requests.get(url, headers=headers, stream=True)
-            if response.status_code == 200:
-                return response.content
-            else:
-                raise ConnectionError(response.status_code, response.url)
-        except Exception as e:
-            raise e
-
-    def __addattribute__(self):
-        try:
-            for k, v in self.info.items():
-                self.__dict__[k] = v
-        except Exception:
-            pass
-
-    def __ut2date__(self, ut):
-        return datetime.fromtimestamp(ut).strftime("%Y-%m-%d %H:%M:%S") if ut else "0000-00-00 00:00:00"
-
-    def __html2text__(self, html):
-        pattern = re.compile(r"<.*?>")
-        return pattern.sub("", html)
-
-    def __videoinfo__(self, url):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
-        }
-        param = parse.parse_qs(parse.urlparse(url).query)
-        target = param['target'][0]
-        videoid = target.split(r'/')[-1]
-        try:
-            response = requests.get(f"https://lens.zhihu.com/api/v4/videos/{videoid}", headers=headers)
-            info = json.loads(response.text, encoding="utf-8")
-            if 'HD' in info['playlist']:
-                return info['playlist']['HD']['play_url'], info['title'], info['playlist']['HD']['format']
-            elif 'SD' in info['playlist']:
-                return info['playlist']['SD']['play_url'], info['title'], info['playlist']['SD']['format']
-            elif 'LD' in info['playlist']:
-                return info['playlist']['LD']['play_url'], info['title'], info['playlist']['LD']['format']
-            else:
-                return
-        except Exception:
-            return
-
-
-class User(Oauth):
+class User(ZhliteBase):
     def __init__(self, ids):
         self.session = Session()
         self.ids = ids
@@ -413,7 +416,7 @@ class User(Oauth):
             yield Question(info["data"][0]["id"])
 
 
-class Answer(Oauth):
+class Answer(ZhliteBase):
 
     def __init__(self, id, **kwargs):
         self.session = Session()
@@ -506,7 +509,7 @@ class Answer(Oauth):
         return
 
 
-class Question(Oauth):
+class Question(ZhliteBase):
 
     def __init__(self, id):
         self.session = Session()
