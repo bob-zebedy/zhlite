@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.3.0"
-__date__ = "2019-08-14"
-__release__ = "新增 ZhliteBase 作为基础父类，其余模块均继承该父类。抽象公共代码"
+__version__ = "1.3.1"
+__date__ = "2019-08-15"
+__release__ = "更改 `Oauth` 为 `Authorization`"
 
 
 class Version(object):
@@ -27,4 +27,4 @@ class Version(object):
 
 version = Version()
 
-__all__ = ["Oauth", "User", "Question", "Answer"]
+__all__ = ["Authorization", "User", "Question", "Answer"]
