@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.3.1"
-__date__ = "2019-08-15"
-__release__ = "更改 `Oauth` 为 `Authorization`"
+__version__ = "1.3.2"
+__date__ = "2019-08-17"
+__release__ = "增加请求随机(0s~1s)间隔 尽可能减少账号因为请求频繁被要求输入验证码"
 
 
 class Version(object):

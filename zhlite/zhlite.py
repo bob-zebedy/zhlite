@@ -95,12 +95,14 @@ class ZhliteBase(object):
 
     def request(self, api, payloads=None):
         try:
-            # sleep(random())
+            sleep(random())
             response = self.session.get(api, params=payloads)
             if response.status_code == 200:
                 return json.loads(response.text, encoding="utf-8")
             elif response.status_code == 410:
                 return False
+            elif response.status_code == 403:
+                raise ConnectionError(response.status_code, response.text)
             else:
                 raise ConnectionError(response.status_code, response.url)
         except Exception as e:
