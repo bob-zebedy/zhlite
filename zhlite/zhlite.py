@@ -331,7 +331,8 @@ class User(ZhliteBase):
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
-        yield User(info["data"][0]["url_token"])
+        if info["data"]:
+            yield User(info["data"][0]["url_token"])
 
         while not is_end:
             offset += 1
@@ -355,7 +356,8 @@ class User(ZhliteBase):
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
-        yield User(info["data"][0]["url_token"])
+        if info["data"]:
+            yield User(info["data"][0]["url_token"])
 
         while not is_end:
             offset += 1
@@ -379,7 +381,8 @@ class User(ZhliteBase):
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
-        yield Answer(info["data"][0]["id"])
+        if info["data"]:
+            yield Answer(info["data"][0]["id"])
 
         while not is_end:
             offset += 1
@@ -403,7 +406,8 @@ class User(ZhliteBase):
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
-        yield Question(info["data"][0]["id"])
+        if info["data"]:
+            yield Question(info["data"][0]["id"])
 
         while not is_end:
             offset += 1
@@ -556,19 +560,20 @@ class Question(ZhliteBase):
         is_end = info["paging"]["is_end"]
         nexturl = info["paging"]["next"]
 
-        yield Answer(
-            id=info["data"][0]["id"],
-            type=info["data"][0]["answer_type"],
-            author=info["data"][0]["author"]["id"],
-            excerpt=info["data"][0]["excerpt"],
-            content=info["data"][0]["content"],
-            text=info["data"][0]["content"],
-            comment_count=info["data"][0]["comment_count"],
-            voteup_count=info["data"][0]["voteup_count"],
-            created=info["data"][0]["created_time"],
-            updated=info["data"][0]["updated_time"],
-            question=Question(info["data"][0]["question"]["id"])
-        )
+        if info["data"]:
+            yield Answer(
+                id=info["data"][0]["id"],
+                type=info["data"][0]["answer_type"],
+                author=info["data"][0]["author"]["id"],
+                excerpt=info["data"][0]["excerpt"],
+                content=info["data"][0]["content"],
+                text=info["data"][0]["content"],
+                comment_count=info["data"][0]["comment_count"],
+                voteup_count=info["data"][0]["voteup_count"],
+                created=info["data"][0]["created_time"],
+                updated=info["data"][0]["updated_time"],
+                question=Question(info["data"][0]["question"]["id"])
+            )
         while not is_end:
             info = self.request(nexturl)
             is_end = info["paging"]["is_end"]

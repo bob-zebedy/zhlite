@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.3.3"
+__version__ = "1.3.4"
 __date__ = "2019-08-17"
-__release__ = "调整请求间隔时间从 0 ~ 1 为 0.1 ~ 0.5"
+__release__ = "修复了当 `User.followers` `User.followings` `User.answers` `User.questions` `Question.answers` 为空时产生迭代错误"
 
 
 class Version(object):
