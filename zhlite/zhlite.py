@@ -7,12 +7,11 @@ import hmac
 import json
 import os
 import re
-import shutil
 import sys
 import threading
 from datetime import datetime
 from http import cookiejar
-from random import random
+from random import uniform
 from time import sleep, time
 from urllib import parse
 from urllib.parse import urlencode
@@ -84,7 +83,7 @@ class ZhliteBase(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
         }
         try:
-            sleep(random())
+            sleep(uniform(0.1, 0.5))
             response = requests.get(url, headers=headers, stream=True)
             if response.status_code == 200:
                 return response.content
@@ -95,7 +94,7 @@ class ZhliteBase(object):
 
     def request(self, api, payloads=None):
         try:
-            sleep(random())
+            sleep(uniform(0.1, 0.5))
             response = self.session.get(api, params=payloads)
             if response.status_code == 200:
                 return json.loads(response.text, encoding="utf-8")
