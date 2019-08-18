@@ -260,6 +260,9 @@ class User(ZhliteBase):
             "uid": "",                                  # 内部ID
             "name": "",                                 # 显示名字
             "gender": self.gendermap[-1],               # 性别 0:女 1:男 -1:未知
+            "employments": "",                          # 职业
+            "educations": "",                           # 教育
+            "locations": "",                            # 地区
             "avatar": "",                               # 用户头像
             "headline": "",                             # 个人简介
             "is_vip": "",                               # 盐选会员
@@ -291,7 +294,7 @@ class User(ZhliteBase):
         api = f"https://www.zhihu.com/api/v4/members/{self.ids}"
 
         payloads = {
-            "include": "follower_count,following_count,answer_count,question_count,articles_count,voteup_count,visits_count"
+            "include": "follower_count,following_count,answer_count,question_count,articles_count,voteup_count,visits_count,employments,educations,locations"
         }
 
         if self.ids in self.anonymous:
@@ -305,6 +308,9 @@ class User(ZhliteBase):
                     "name": info["name"],
                     "avatar": info["avatar_url"],
                     "gender": self.gendermap[info["gender"]],
+                    "employments": {i.get("company",{}).get("name",""):i.get("job",{}).get("name","") for i in info["employments"]},
+                    "educations": {i.get("school", {}).get("name", ""): i.get("major", {}).get("name", "") for i in info["educations"]},
+                    "locations": [i["name"] for i in info["locations"]],
                     "headline": info["headline"],
                     "is_vip": info["vip_info"]["is_vip"],
                     "follower_count": info["follower_count"],
