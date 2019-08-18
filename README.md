@@ -70,6 +70,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | id | int | 问题ID |
 | title | str | 问题标题 |
 | detail | str | 问题描述 |
+| topics | list | 问题标签 |
 | type | str | 问题状态 |
 | created | datetime | 提问时间 |
 | updated | datetime | 最后一次修改时间 |

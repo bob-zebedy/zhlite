@@ -522,6 +522,7 @@ class Question(ZhliteBase):
             "id": id,
             "title": None,
             "detail": None,
+            "topics": None,
             "type": None,
             "created": None,
             "updated": None,
@@ -535,12 +536,13 @@ class Question(ZhliteBase):
     def __getinfo__(self):
         url = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}"
         payloads = {
-            "include": "question.detail,author"
+            "include": "question.detail,author,topics"
         }
         info = self.request(url, payloads)
 
         self.info["title"] = info["title"]
         self.info["detail"] = self.__html2text__(info["detail"])
+        self.info["topics"] = [i["name"] for i in info["topics"]]
         self.info["type"] = info["question_type"]
         self.info["created"] = self.__ut2date__(info["created"])
         self.info["updated"] = self.__ut2date__(info["updated_time"])
