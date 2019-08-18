@@ -27,14 +27,14 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 `pip3 install zhlite`
 # 使用
 `zhlite` 有几个关键核心类：
- 1. Authorization(用户认证模块)
+ 1. Auth(用户认证模块)
  2. User(用户模块)
  3. Question(问题模块)
  4. Answer(回答模块)
  
 ## 模块说明
 
-### Authorization
+### Auth
 | 属性 | 类型 | 描述 |
 | :----:| :----: | :----: |
 | login() | method | 用户登陆 |
@@ -95,26 +95,26 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 
 # 使用
 
-## 用户认证(Authorization)
-第一次实例化 `Authorization` 对象时需要通过手机号和密码登陆，之后会生成一个 `cookies.txt` 文件保存登录信息，以后无需再次重复登陆。如需重新登陆，可以通过 `.login(relogin=True)` 强制重新登陆，并刷新 `cookies.txt` 文件  
+## 用户认证(Auth)
+第一次实例化 `Auth` 对象时需要通过手机号和密码登陆，之后会生成一个 `cookies.txt` 文件保存登录信息，以后无需再次重复登陆。如需重新登陆，可以通过 `.login(relogin=True)` 强制重新登陆，并刷新 `cookies.txt` 文件  
 **注意：短时间内多次通过密码登陆会导致账户异常，账户异常会强制要求用户更改密码并短时间内锁定ip**
 ```python
->>> from zhlite import Authorization
->>> Authorization = Authorization()
->>> Authorization.login(relogin=True)
+>>> from zhlite import Auth
+>>> auth = Auth()
+>>> auth.login(relogin=True)
 ```
 ## 登陆用户
 用户登陆之后可通过 `.mine` 获得一个 `User` 对象为已登录用户
 ```python
->>> from zhlite import Authorization
->>> Authorization = Authorization()
->>> Authorization.mine
+>>> from zhlite import Auth
+>>> auth = Auth()
+>>> auth.mine
 <zhlite.zhlite.User object at 0x0000024C6C989630>
 ```
 ## 用户(User)
 ```python
->>> from zhlite import Authorization, User, Question, Answer
->>> Authorization = Authorization()
+>>> from zhlite import Auth, User, Question, Answer
+>>> auth = Auth()
 >>> user = User('zhihuadmin')       # 知乎小管家
 >>> user
 <zhlite.zhlite.User object at 0x00000293F66A81D0>
@@ -129,8 +129,8 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 ```
 ## 问题(Question)
 ```python
->>> from zhlite import Authorization
->>> Authorization = Authorization()
+>>> from zhlite import Auth
+>>> auth = Auth()
 >>> question = Question('19550225')
 >>> question
 <zhlite.zhlite.Question object at 0x00000293F76ECF28>

@@ -108,7 +108,7 @@ class ZhliteBase(object):
             raise e
 
 
-class Authorization(ZhliteBase):
+class Auth(ZhliteBase):
     platform = sys.platform
     info = {
         "platform": platform

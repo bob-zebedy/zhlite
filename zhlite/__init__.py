@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 __date__ = "2019-08-18"
-__release__ = "新增了 Question.topics 为问题标签"
+__release__ = "重命名 `Authorization` 为 `Auth` "
 
 
 class Version(object):
@@ -27,4 +27,4 @@ class Version(object):
 
 version = Version()
 
-__all__ = ["Authorization", "User", "Question", "Answer"]
+__all__ = ["Auth", "User", "Question", "Answer"]
