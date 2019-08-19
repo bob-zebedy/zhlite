@@ -281,14 +281,14 @@ class User(ZhliteBase):
     def __eq__(self, anouser):
         if isinstance(anouser, User):
             if self and anouser:
-                return self.info["id"] == anouser.info["id"]
+                return self.info["uid"] == anouser.info["uid"]
             else:
                 return False
         else:
             raise TypeError("A non-User Object")
 
     def __bool__(self):
-        return True if self.ids not in self.anonymous else False
+        return True if self.info["uid"] not in self.anonymous else False
 
     def __getinfo__(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.ids}"

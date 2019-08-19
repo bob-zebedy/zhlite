@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.5.0"
-__date__ = "2019-08-18"
-__release__ = " `User` 增加 `employments` `educations` `locations` 属性"
+__version__ = "1.5.1"
+__date__ = "2019-08-19"
+__release__ = " 更新判断 `User` 对象是否有效的逻辑"
 
 
 class Version(object):
