@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 __date__ = "2019-08-19"
-__release__ = " 更新判断 `User` 对象是否有效的逻辑"
+__release__ = "`User` 增加 `is_org` 字段区分机构号和个人号"
 
 
 class Version(object):

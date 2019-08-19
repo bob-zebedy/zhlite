@@ -55,6 +55,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | avatar | str | 用户头像 |
 | headline | str | 个人简介 |
 | is_vip | bool | 盐选会员 |
+| is_vip | bool | 机构号 |
 | follower_count | int | 关注者数量 |
 | followers | generator | 关注者 |
 | following_count | int | 关注的人数量 |
