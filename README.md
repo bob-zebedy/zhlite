@@ -108,13 +108,15 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 >>> auth.login(relogin=True)
 ```
 ## 登陆用户
-用户登陆之后可通过 `.mine` 获得一个 `User` 对象为已登录用户
+用户登陆之后可通过 `.profile` 获得一个登录用户的 `User` 对象
 ```python
 >>> from zhlite import Auth
 >>> auth = Auth()
->>> auth.mine
+>>> auth.profile
 <zhlite.zhlite.User object at 0x0000024C6C989630>
 ```
+登录成功之后会在当前路径下保存一个 `cookies.txt` 作为下次登陆免输入的 `cookies` 文件，如果需要强制重新登陆或者更换登录用户，可以通过 `.islogin(relogin=True)` (`relogin` 指定 `True` 即为强制登陆)
+
 ## 用户(User)
 ```python
 >>> from zhlite import Auth, User, Question, Answer
