@@ -428,6 +428,31 @@ class User(ZhliteBase):
 
             yield Question(info["data"][0]["id"])
 
+    @property
+    def articles(self):
+        api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/articles"
+        offset = 0
+        payloads = {
+            "limit": 1,
+            "offset": offset,
+        }
+        info = self.request(api, payloads)
+        is_end = info["paging"]["is_end"]
+
+        if info["data"]:
+            yield Article(info["data"][0]["id"])
+
+        while not is_end:
+            offset += 1
+            payloads = {
+                "limit": 1,
+                "offset": offset,
+            }
+            info = self.request(api, payloads)
+            is_end = info["paging"]["is_end"]
+
+            yield Article(info["data"][0]["id"])
+
 
 class Answer(ZhliteBase):
 
@@ -453,11 +478,11 @@ class Answer(ZhliteBase):
         self.__addattribute__()
 
     def __getinfo__(self):
-        url = f"https://www.zhihu.com/api/v4/answers/{self.info['id']}"
+        api = f"https://www.zhihu.com/api/v4/answers/{self.info['id']}"
         payloads = {
             "include": "content,excerpt,comment_count,voteup_count"
         }
-        info = self.request(url, payloads)
+        info = self.request(api, payloads)
 
         self.info["type"] = info["answer_type"]
         self.info["author"] = User(info["author"]["id"])
@@ -542,11 +567,11 @@ class Question(ZhliteBase):
         self.__addattribute__()
 
     def __getinfo__(self):
-        url = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}"
+        api = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}"
         payloads = {
             "include": "question.detail,author,topics"
         }
-        info = self.request(url, payloads)
+        info = self.request(api, payloads)
 
         self.info["title"] = info["title"]
         self.info["detail"] = self.__html2text__(info["detail"])
@@ -558,14 +583,14 @@ class Question(ZhliteBase):
 
     @property
     def answers(self):
-        url = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}/answers"
+        api = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}/answers"
         payloads = {
             "include": "content,excerpt,comment_count,voteup_count",
             "offset": 0,
             "limit": 1,
             "sort_by": "created"
         }
-        info = self.request(url, payloads)
+        info = self.request(api, payloads)
 
         is_end = info["paging"]["is_end"]
         nexturl = info["paging"]["next"]
@@ -601,3 +626,41 @@ class Question(ZhliteBase):
                 updated=info["data"][0]["updated_time"],
                 question=Question(info["data"][0]["question"]["id"])
             )
+
+
+class Article(ZhliteBase):
+    def __init__(self, id):
+        self.session = Session()
+        self.info = {
+            "id": id,
+            "title": "",
+            "author": None,
+            "created": None,
+            "updated": None,
+            "topics": None,
+            "excerpt": "",
+            "content": "",
+            "text": "",
+            "comment_count": None,
+            "voteup_count": None,
+        }
+
+        self.__getinfo__()
+        self.__addattribute__()
+
+    def __getinfo__(self):
+        api = f"https://www.zhihu.com/api/v4/articles/{self.info['id']}"
+        info = self.request(api)
+
+        self.info.update({
+            "title": info["title"],
+            "author": User(info["author"].get("id", "")),
+            "created": self.__ut2date__(info["created"]),
+            "updated": self.__ut2date__(info["updated"]),
+            "topics": [i["name"] for i in info["topics"]],
+            "excerpt": info["excerpt"],
+            "content": info["content"],
+            "text": self.__html2text__(info["content"]),
+            "comment_count": info["comment_count"],
+            "voteup_count": info["voteup_count"]
+        })

@@ -18,20 +18,22 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
  - [x] 登陆用户的关注和被关注信息
  - [x] 登陆用户的提问
  - [x] 登陆用户的回答
+ - [x] 登陆用户的文章
  - [x] 以登陆用户的身份访问问题
  - [x] 以登录用户的身份访问回答
  - [x] 批量下载回答中的图片
- - [x] 批量下载回答中的视频
+ - [x] 批量下载回答中的视频 
  - [ ] 获取回答的评论
- - [ ] 添加代理支持
+ - [ ] 增加代理支持
 # 安装
 `pip3 install zhlite`
 # 使用
 `zhlite` 有几个关键核心类：
- 1. Auth(用户认证模块)
- 2. User(用户模块)
- 3. Question(问题模块)
- 4. Answer(回答模块)
+ 1. Auth (用户认证模块)
+ 2. User (用户模块)
+ 3. Question (问题模块)
+ 4. Answer (回答模块)
+ 5. Article (文章模块)
  
 ## 模块说明
 
@@ -66,6 +68,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | question_count | int | 提问数量 |
 | questions | generator | 提问 |
 | article_count | int | 文章数量 |
+| articles | generator | 文章 |
 | voteup_count | int | 获得赞同数量 |
 | visit_count | int | 来访者数量 |
 
@@ -98,7 +101,22 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | question | Question Object | 对应的问题 |
 | save() | method | 保存回答中的图片和视频 |
 
-# 使用
+### Article
+| 属性 | 类型 | 描述 |
+| :----:| :----: | :----: |
+| id | int | 文章ID |
+| title | str | 文章标题 |
+| author | User Object | 发布者 |
+| topics | list | 话题 |
+| excerpt | str | 摘要 |
+| content | str | 回答(包含HTML信息) |
+| text | str | 回答(不包含HTML信息) |
+| comment_count | int | 评论数 |
+| voteup_count | int | 赞同数 |
+| created | datetime | 发布时间 |
+| updated | datetime | 最后一次修改时间 |
+
+# 简要使用
 
 ## 用户认证(Auth)
 第一次实例化 `Auth` 对象时需要通过手机号和密码登陆，之后会生成一个 `cookies.txt` 文件保存登录信息，以后无需再次重复登陆。如需重新登陆，可以通过 `.login(relogin=True)` 强制重新登陆，并刷新 `cookies.txt` 文件  

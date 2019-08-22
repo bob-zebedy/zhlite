@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.5.2"
-__date__ = "2019-08-19"
-__release__ = "`User` 增加 `is_org` 字段区分机构号和个人号"
+__version__ = "1.6.0"
+__date__ = "2019-08-22"
+__release__ = "新增 `Article` 模块。支持获取文章信息了"
 
 
 class Version(object):
@@ -27,4 +27,4 @@ class Version(object):
 
 version = Version()
 
-__all__ = ["Auth", "User", "Question", "Answer"]
+__all__ = ["Auth", "User", "Question", "Answer", "Article"]
