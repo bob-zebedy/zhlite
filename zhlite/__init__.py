@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.6.0"
-__date__ = "2019-08-22"
-__release__ = "新增 `Article` 模块。支持获取文章信息了"
+__version__ = "1.6.1"
+__date__ = "2019-08-24"
+__release__ = "更新：减少了请求次数，降低账号被限制的风险，加快了数据获取速度"
 
 
 class Version(object):

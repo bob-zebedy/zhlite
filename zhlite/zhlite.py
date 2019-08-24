@@ -11,7 +11,6 @@ import sys
 import threading
 from datetime import datetime
 from http import cookiejar
-from random import uniform
 from time import sleep, time
 from urllib import parse
 from urllib.parse import urlencode
@@ -83,7 +82,7 @@ class ZhliteBase(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
         }
         try:
-            sleep(uniform(0.1, 0.5))
+            sleep(0.2)
             response = requests.get(url, headers=headers, stream=True)
             if response.status_code == 200:
                 return response.content
@@ -94,7 +93,7 @@ class ZhliteBase(object):
 
     def request(self, api, payloads=None):
         try:
-            sleep(uniform(0.1, 0.5))
+            sleep(0.2)
             response = self.session.get(api, params=payloads)
             if response.status_code == 200:
                 return json.loads(response.text, encoding="utf-8")
@@ -333,125 +332,135 @@ class User(ZhliteBase):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/followers"
         offset = 0
         payloads = {
-            "limit": 1,
+            "limit": 20,
             "offset": offset,
         }
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
         if info["data"]:
-            yield User(info["data"][0]["url_token"])
+            for user in info["data"]:
+                yield User(user["url_token"])
 
         while not is_end:
-            offset += 1
+            offset += 20
             payloads = {
-                "limit": 1,
+                "limit": 20,
                 "offset": offset,
             }
             info = self.request(api, payloads)
             is_end = info["paging"]["is_end"]
 
-            yield User(info["data"][0]["url_token"])
+            for user in info["data"]:
+                yield User(user["url_token"])
 
     @property
     def followings(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/followees"
         offset = 0
         payloads = {
-            "limit": 1,
+            "limit": 20,
             "offset": offset,
         }
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
         if info["data"]:
-            yield User(info["data"][0]["url_token"])
+            for user in info["data"]:
+                yield User(user["url_token"])
 
         while not is_end:
-            offset += 1
+            offset += 20
             payloads = {
-                "limit": 1,
+                "limit": 20,
                 "offset": offset,
             }
             info = self.request(api, payloads)
             is_end = info["paging"]["is_end"]
 
-            yield User(info["data"][0]["url_token"])
+            for user in info["data"]:
+                yield User(user["url_token"])
 
     @property
     def answers(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/answers"
         offset = 0
         payloads = {
-            "limit": 1,
+            "limit": 20,
             "offset": offset,
         }
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
         if info["data"]:
-            yield Answer(info["data"][0]["id"])
+            for answer in info["data"]:
+                yield Answer(answer["id"])
 
         while not is_end:
-            offset += 1
+            offset += 20
             payloads = {
-                "limit": 1,
+                "limit": 20,
                 "offset": offset,
             }
             info = self.request(api, payloads)
             is_end = info["paging"]["is_end"]
 
-            yield Answer(info["data"][0]["id"])
+            for answer in info["data"]:
+                yield Answer(answer["id"])
 
     @property
     def questions(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/questions"
         offset = 0
         payloads = {
-            "limit": 1,
+            "limit": 20,
             "offset": offset,
         }
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
         if info["data"]:
-            yield Question(info["data"][0]["id"])
+            for question in info["data"]:
+                yield Question(question["id"])
 
         while not is_end:
-            offset += 1
+            offset += 20
             payloads = {
-                "limit": 1,
+                "limit": 20,
                 "offset": offset,
             }
             info = self.request(api, payloads)
             is_end = info["paging"]["is_end"]
 
-            yield Question(info["data"][0]["id"])
+            for question in info["data"]:
+                yield Question(question["id"])
 
     @property
     def articles(self):
         api = f"https://www.zhihu.com/api/v4/members/{self.info['id']}/articles"
         offset = 0
         payloads = {
-            "limit": 1,
+            "limit": 20,
             "offset": offset,
         }
         info = self.request(api, payloads)
         is_end = info["paging"]["is_end"]
 
         if info["data"]:
-            yield Article(info["data"][0]["id"])
+            for article in info["data"]:
+                yield Article(article["id"])
 
         while not is_end:
-            offset += 1
+            offset += 20
             payloads = {
-                "limit": 1,
+                "limit": 20,
                 "offset": offset,
             }
             info = self.request(api, payloads)
             is_end = info["paging"]["is_end"]
 
-            yield Article(info["data"][0]["id"])
+            for article in info["data"]:
+                yield Article(article["id"])
 
 
 class Answer(ZhliteBase):
@@ -587,7 +596,7 @@ class Question(ZhliteBase):
         payloads = {
             "include": "content,excerpt,comment_count,voteup_count",
             "offset": 0,
-            "limit": 1,
+            "limit": 10,
             "sort_by": "created"
         }
         info = self.request(api, payloads)
@@ -596,36 +605,39 @@ class Question(ZhliteBase):
         nexturl = info["paging"]["next"]
 
         if info["data"]:
-            yield Answer(
-                id=info["data"][0]["id"],
-                type=info["data"][0]["answer_type"],
-                author=info["data"][0]["author"]["id"],
-                excerpt=info["data"][0]["excerpt"],
-                content=info["data"][0]["content"],
-                text=info["data"][0]["content"],
-                comment_count=info["data"][0]["comment_count"],
-                voteup_count=info["data"][0]["voteup_count"],
-                created=info["data"][0]["created_time"],
-                updated=info["data"][0]["updated_time"],
-                question=Question(info["data"][0]["question"]["id"])
-            )
+            for answer in info["data"]:
+                yield Answer(
+                    id=answer["id"],
+                    type=answer["answer_type"],
+                    author=answer["author"]["id"],
+                    excerpt=answer["excerpt"],
+                    content=answer["content"],
+                    text=answer["content"],
+                    comment_count=answer["comment_count"],
+                    voteup_count=answer["voteup_count"],
+                    created=answer["created_time"],
+                    updated=answer["updated_time"],
+                    question=Question(answer["question"]["id"])
+                )
         while not is_end:
             info = self.request(nexturl)
             is_end = info["paging"]["is_end"]
             nexturl = info["paging"]["next"]
-            yield Answer(
-                id=info["data"][0]["id"],
-                type=info["data"][0]["answer_type"],
-                author=info["data"][0]["author"]["id"],
-                excerpt=info["data"][0]["excerpt"],
-                content=info["data"][0]["content"],
-                text=info["data"][0]["content"],
-                comment_count=info["data"][0]["comment_count"],
-                voteup_count=info["data"][0]["voteup_count"],
-                created=info["data"][0]["created_time"],
-                updated=info["data"][0]["updated_time"],
-                question=Question(info["data"][0]["question"]["id"])
-            )
+
+            for answer in info["data"]:
+                yield Answer(
+                    id=answer["id"],
+                    type=answer["answer_type"],
+                    author=answer["author"]["id"],
+                    excerpt=answer["excerpt"],
+                    content=answer["content"],
+                    text=answer["content"],
+                    comment_count=answer["comment_count"],
+                    voteup_count=answer["voteup_count"],
+                    created=answer["created_time"],
+                    updated=answer["updated_time"],
+                    question=Question(answer["question"]["id"])
+                )
 
 
 class Article(ZhliteBase):
