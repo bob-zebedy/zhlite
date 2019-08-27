@@ -279,13 +279,16 @@ class User(ZhliteBase):
         self.__addattribute__()
 
     def __eq__(self, anouser):
-        if isinstance(anouser, User):
+        if isinstance(anouser, self.__class__):
             if self and anouser:
                 return self.info["uid"] == anouser.info["uid"]
             else:
                 return False
         else:
             raise TypeError("A non-User Object")
+
+    def __hash__(self):
+        return hash(self.info["uid"])
 
     def __bool__(self):
         return True if self.info["uid"] not in self.anonymous else False
@@ -486,6 +489,18 @@ class Answer(ZhliteBase):
 
         self.__addattribute__()
 
+    def __eq__(self, anoanswer):
+        if isinstance(anoanswer, self.__class__):
+            if self and anoanswer:
+                return self.info["id"] == anoanswer.info["id"]
+            else:
+                return False
+        else:
+            raise TypeError("A non-Anoanswer Object")
+
+    def __hash__(self):
+        return hash(self.info["id"])
+
     def __getinfo__(self):
         api = f"https://www.zhihu.com/api/v4/answers/{self.info['id']}"
         payloads = {
@@ -575,6 +590,18 @@ class Question(ZhliteBase):
 
         self.__addattribute__()
 
+    def __eq__(self, anoquestion):
+        if isinstance(anoquestion, self.__class__):
+            if self and anoquestion:
+                return self.info["id"] == anoquestion.info["id"]
+            else:
+                return False
+        else:
+            raise TypeError("A non-Question Object")
+
+    def __hash__(self):
+        return hash(self.info["id"])
+
     def __getinfo__(self):
         api = f"https://www.zhihu.com/api/v4/questions/{self.info['id']}"
         payloads = {
@@ -659,6 +686,18 @@ class Article(ZhliteBase):
 
         self.__getinfo__()
         self.__addattribute__()
+
+    def __eq__(self, anoarticle):
+        if isinstance(anoarticle, self.__class__):
+            if self and anoarticle:
+                return self.info["id"] == anoarticle.info["id"]
+            else:
+                return False
+        else:
+            raise TypeError("A non-Article Object")
+
+    def __hash__(self):
+        return hash(self.info["id"])
 
     def __getinfo__(self):
         api = f"https://www.zhihu.com/api/v4/articles/{self.info['id']}"
