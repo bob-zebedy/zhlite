@@ -351,11 +351,14 @@ class User(ZhliteBase):
                 "limit": 20,
                 "offset": offset,
             }
-            info = self.request(api, payloads)
-            is_end = info["paging"]["is_end"]
+            try:
+                info = self.request(api, payloads)
+                is_end = info["paging"]["is_end"]
 
-            for user in info["data"]:
-                yield User(user["url_token"])
+                for user in info["data"]:
+                    yield User(user["url_token"])
+            except Exception:
+                pass
 
     @property
     def followings(self):
@@ -378,11 +381,14 @@ class User(ZhliteBase):
                 "limit": 20,
                 "offset": offset,
             }
-            info = self.request(api, payloads)
-            is_end = info["paging"]["is_end"]
+            try:
+                info = self.request(api, payloads)
+                is_end = info["paging"]["is_end"]
 
-            for user in info["data"]:
-                yield User(user["url_token"])
+                for user in info["data"]:
+                    yield User(user["url_token"])
+            except Exception:
+                pass
 
     @property
     def answers(self):
@@ -432,11 +438,14 @@ class User(ZhliteBase):
                 "limit": 20,
                 "offset": offset,
             }
-            info = self.request(api, payloads)
-            is_end = info["paging"]["is_end"]
+            try:
+                info = self.request(api, payloads)
+                is_end = info["paging"]["is_end"]
 
-            for question in info["data"]:
-                yield Question(question["id"])
+                for question in info["data"]:
+                    yield Question(question["id"])
+            except Exception:
+                pass
 
     @property
     def articles(self):
@@ -459,11 +468,14 @@ class User(ZhliteBase):
                 "limit": 20,
                 "offset": offset,
             }
-            info = self.request(api, payloads)
-            is_end = info["paging"]["is_end"]
+            try:
+                info = self.request(api, payloads)
+                is_end = info["paging"]["is_end"]
 
-            for article in info["data"]:
-                yield Article(article["id"])
+                for article in info["data"]:
+                    yield Article(article["id"])
+            except Exception:
+                pass
 
 
 class Answer(ZhliteBase):
@@ -647,24 +659,27 @@ class Question(ZhliteBase):
                     question=Question(answer["question"]["id"])
                 )
         while not is_end:
-            info = self.request(nexturl)
-            is_end = info["paging"]["is_end"]
-            nexturl = info["paging"]["next"]
+            try:
+                info = self.request(nexturl)
+                is_end = info["paging"]["is_end"]
+                nexturl = info["paging"]["next"]
 
-            for answer in info["data"]:
-                yield Answer(
-                    id=answer["id"],
-                    type=answer["answer_type"],
-                    author=answer["author"]["id"],
-                    excerpt=answer["excerpt"],
-                    content=answer["content"],
-                    text=answer["content"],
-                    comment_count=answer["comment_count"],
-                    voteup_count=answer["voteup_count"],
-                    created=answer["created_time"],
-                    updated=answer["updated_time"],
-                    question=Question(answer["question"]["id"])
-                )
+                for answer in info["data"]:
+                    yield Answer(
+                        id=answer["id"],
+                        type=answer["answer_type"],
+                        author=answer["author"]["id"],
+                        excerpt=answer["excerpt"],
+                        content=answer["content"],
+                        text=answer["content"],
+                        comment_count=answer["comment_count"],
+                        voteup_count=answer["voteup_count"],
+                        created=answer["created_time"],
+                        updated=answer["updated_time"],
+                        question=Question(answer["question"]["id"])
+                    )
+            except Exception:
+                pass
 
 
 class Article(ZhliteBase):
