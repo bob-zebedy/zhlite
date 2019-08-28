@@ -7,7 +7,7 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.6.2"
+__version__ = "1.6.3"
 __date__ = "2019-08-27"
 __release__ = " `User` `Question` `Answer` `Article` 新增  `__eq__` 和 `__hash__` 方法"
 
