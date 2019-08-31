@@ -168,7 +168,7 @@ class Auth(ZhliteBase):
         if self.islogin:
             self.session.cookies.save()
         else:
-            raise LoginError(response.status_code, response.text)
+            raise LoginError(json.loads(response.text, encoding="utf-8")["error"]["message"])
 
     def __getcaptcha__(self):
         api = "https://www.zhihu.com/api/v3/oauth/captcha?lang=en"
@@ -189,9 +189,11 @@ class Auth(ZhliteBase):
                 img_thread.start()
 
             capt = input("验证码: ")
-            self.session.post(api, data={"input_text": capt})
-            return capt
-        return ""
+            resp = self.session.post(api, data={"input_text": capt})
+            if resp.status_code == 201:
+                return capt
+            else:
+                self.__getcaptcha__()
 
     def __gettimestamp__(self):
         return int(time()*1000)

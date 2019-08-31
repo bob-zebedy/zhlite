@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.6.3"
-__date__ = "2019-08-27"
-__release__ = " `User` `Question` `Answer` `Article` 新增  `__eq__` 和 `__hash__` 方法"
+__version__ = "1.6.4"
+__date__ = "2019-08-31"
+__release__ = "登陆时如果验证码输错无需重新输入手机号和密码，只需要再次输入新的验证码即可"
 
 
 class Version(object):
