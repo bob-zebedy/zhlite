@@ -64,7 +64,7 @@ class ZhliteBase(object):
         target = param['target'][0]
         videoid = target.split(r'/')[-1]
         try:
-            response = requests.get(f"https://lens.zhihu.com/api/v4/videos/{videoid}", headers=headers)
+            response = requests.get(f"https://lens.zhihu.com/api/v4/videos/{videoid}", headers=headers, timeout=10)
             info = json.loads(response.text, encoding="utf-8")
             if 'HD' in info['playlist']:
                 return info['playlist']['HD']['play_url'], info['title'], info['playlist']['HD']['format']
@@ -83,7 +83,7 @@ class ZhliteBase(object):
         }
         try:
             sleep(0.2)
-            response = requests.get(url, headers=headers, stream=True)
+            response = requests.get(url, headers=headers, stream=True, timeout=10)
             if response.status_code == 200:
                 return response.content
             else:
@@ -94,7 +94,7 @@ class ZhliteBase(object):
     def request(self, api, payloads=None):
         try:
             sleep(0.2)
-            response = self.session.get(api, params=payloads)
+            response = self.session.get(api, params=payloads, timeout=10)
             if response.status_code == 200:
                 return json.loads(response.text, encoding="utf-8")
             elif response.status_code == 410:
