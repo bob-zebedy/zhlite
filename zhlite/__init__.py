@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.6.5"
-__date__ = "2019-09-01"
-__release__ = "请求超时设置为 10s"
+__version__ = "1.7.0"
+__date__ = "2019-09-02"
+__release__ = " `Answer` 新增 `images` 和 `vides` 方法 "
 
 
 class Version(object):

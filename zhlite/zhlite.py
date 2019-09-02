@@ -18,7 +18,6 @@ from urllib.parse import urlencode
 import execjs
 import requests
 from bs4 import BeautifulSoup
-from PIL import Image
 
 
 def singleton(cls):
@@ -182,11 +181,6 @@ class Auth(ZhliteBase):
             imgb64 = json_put["img_base64"].replace(r"\n", "")
             with open("captcha.jpg", "wb") as f:
                 f.write(base64.b64decode(imgb64))
-
-            if self.platform == "win32":
-                img = Image.open("captcha.jpg")
-                img_thread = threading.Thread(target=img.show, daemon=True)
-                img_thread.start()
 
             capt = input("验证码: ")
             resp = self.session.post(api, data={"input_text": capt})
@@ -533,56 +527,34 @@ class Answer(ZhliteBase):
         self.info["updated"] = self.__ut2date__(info["updated_time"])
         self.info["question"] = Question(info["question"]["id"])
 
-    def save(self, typed="all", path=None):
-        if not path:
-            path = os.path.join(
-                str(self.info["question"].id)+"_"+self.info["question"].title,
-                str(self.info["id"])
-            )
-            try:
-                os.makedirs(path)
-            except Exception:
-                pass
+    @property
+    def images(self):
+        default_path = os.path.join(
+            str(self.info["question"].title[:-1] + "-" + str(self.info["question"].id)),
+            str(self.info["id"])
+        )
+        soupic = BeautifulSoup(self.info["content"], "lxml")
+        noscript = soupic.find_all("noscript")
 
-        def downpic():
-            soupic = BeautifulSoup(self.info["content"], "lxml")
-            noscript = soupic.find_all("noscript")
+        for imgtag in noscript:
+            if imgtag.img.has_attr("data-original"):
+                url = imgtag.img["data-original"]
+            else:
+                url = imgtag.img["src"]
+            yield Image(url, default_path)
 
-            for imgtag in noscript:
-                if imgtag.img.has_attr("data-original"):
-                    url = imgtag.img["data-original"]
-                else:
-                    url = imgtag.img["src"]
-                data = self.__download__(url)
-                with open(os.path.join(path, os.path.basename(url)), "wb") as f:
-                    print(f.name)
-                    f.write(data)
-
-        def downvideo():
-            soupvd = BeautifulSoup(self.info["content"], "lxml")
-            vdlink = soupvd.find_all("a", {"class": "video-box"})
-            for vd in vdlink:
-                if vd.has_attr("href"):
-                    urlinfo = self.__videoinfo__(vd["href"])
-                    data = self.__download__(urlinfo[0])
-                    if urlinfo[1] is None or urlinfo[1] == "":
-                        filename = "".join((str(self.__gettimestamp__()), ".", urlinfo[-1]))
-                    else:
-                        filename = "".join((urlinfo[1], ".", urlinfo[-1]))
-                    with open(os.path.join(path, filename), "wb") as f:
-                        print(f.name)
-                        f.write(data)
-
-        if typed == "picture":
-            downpic()
-        elif typed == "video":
-            downvideo()
-        elif typed == "all":
-            downpic()
-            downvideo()
-        else:
-            raise ValueError(typed)
-        return
+    @property
+    def videos(self):
+        default_path = os.path.join(
+            str(self.info["question"].title[:-1] + "-" + str(self.info["question"].id)),
+            str(self.info["id"])
+        )
+        soupvd = BeautifulSoup(self.info["content"], "lxml")
+        vdlink = soupvd.find_all("a", {"class": "video-box"})
+        for vd in vdlink:
+            if vd.has_attr("href"):
+                urlinfo = self.__videoinfo__(vd["href"])
+                yield Video(urlinfo, default_path)
 
 
 class Question(ZhliteBase):
@@ -732,3 +704,45 @@ class Article(ZhliteBase):
             "comment_count": info["comment_count"],
             "voteup_count": info["voteup_count"]
         })
+
+
+class Image(ZhliteBase):
+    def __init__(self, url, default_path):
+        self.url = url
+        self.default_path = default_path
+
+    def save(self, path=None):
+        _path_ = path if path else self.default_path
+        try:
+            os.makedirs(_path_)
+        except Exception:
+            pass
+        data = self.__download__(self.url)
+
+        with open(os.path.join(_path_, os.path.basename(self.url)), "wb") as f:
+            print(f.name)
+            f.write(data)
+
+
+class Video(ZhliteBase):
+    def __init__(self, urlinfo, default_path):
+        self.urlinfo = urlinfo
+        self.default_path = default_path
+
+    def save(self, path=None):
+        _path_ = path if path else self.default_path
+        try:
+            os.makedirs(_path_)
+        except Exception:
+            pass
+
+        if self.urlinfo[1] is None or self.urlinfo[1] == "":
+            filename = "".join((str(time()*1000), ".", self.urlinfo[-1]))
+        else:
+            filename = "".join((self.urlinfo[1], ".", self.urlinfo[-1]))
+
+        data = self.__download__(self.urlinfo[0])
+
+        with open(os.path.join(_path_, filename), "wb") as f:
+            print(f.name)
+            f.write(data)

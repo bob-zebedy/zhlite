@@ -99,7 +99,8 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | created | datetime | 回答时间 |
 | updated | datetime | 最后一次修改时间 |
 | question | Question Object | 对应的问题 |
-| save() | method | 保存回答中的图片和视频 |
+| images | generator | 该回答的图片 |
+| videos | generator | 该回答的视频 |
 
 ### Article
 | 属性 | 类型 | 描述 |
