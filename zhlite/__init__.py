@@ -7,7 +7,7 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.7.1"
+__version__ = "1.8.0"
 __date__ = "2019-09-03"
 __release__ = "支持代理"
 
