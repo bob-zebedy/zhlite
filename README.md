@@ -119,6 +119,15 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 
 # 简要使用
 
+## 使用代理(proxy)
+```python
+>>> import zhlite
+>>> proxies = {
+>>>     "http":"http://ip:port",
+>>>     "https":"https://ip:port"
+>>> }
+>>> zhlite.set_proxy(proxies)
+```
 ## 用户认证(Auth)
 第一次实例化 `Auth` 对象时需要通过手机号和密码登陆，之后会生成一个 `cookies.txt` 文件保存登录信息，以后无需再次重复登陆。如需重新登陆，可以通过 `.login(relogin=True)` 强制重新登陆，并刷新 `cookies.txt` 文件  
 **注意：短时间内多次通过密码登陆会导致账户异常，账户异常会强制要求用户更改密码并短时间内锁定ip**
