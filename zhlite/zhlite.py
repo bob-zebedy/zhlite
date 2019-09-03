@@ -8,7 +8,6 @@ import json
 import os
 import re
 import sys
-import threading
 from datetime import datetime
 from http import cookiejar
 from time import sleep, time

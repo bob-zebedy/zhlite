@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from zhlite.zhlite import *
+from zhlite.zhlite import Auth, User, Question, Answer, Article, Session
 
 __author__ = "zhangbo"
 __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.7.0"
-__date__ = "2019-09-02"
-__release__ = " `Answer` 新增 `images` 和 `vides` 方法 "
+__version__ = "1.7.1"
+__date__ = "2019-09-03"
+__release__ = "支持代理"
+
+__all__ = ["Auth", "User", "Question", "Answer", "Article"]
 
 
 class Version(object):
@@ -27,4 +29,7 @@ class Version(object):
 
 version = Version()
 
-__all__ = ["Auth", "User", "Question", "Answer", "Article"]
+
+def set_proxy(proxies):
+    session = Session()
+    session.proxies.update(proxies)
