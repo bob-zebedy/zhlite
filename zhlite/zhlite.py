@@ -722,6 +722,10 @@ class Image(ZhliteBase):
             print(f.name)
             f.write(data)
 
+    @property
+    def url(self):
+        return self.url
+
 
 class Video(ZhliteBase):
     def __init__(self, urlinfo, default_path):
@@ -745,3 +749,7 @@ class Video(ZhliteBase):
         with open(os.path.join(_path_, filename), "wb") as f:
             print(f.name)
             f.write(data)
+
+    @property
+    def url(self):
+        return self.urlinfo[0]

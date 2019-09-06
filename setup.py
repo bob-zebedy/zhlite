@@ -10,7 +10,7 @@ setuptools.setup(
     version=__version__,
     author=__author__,
     author_email=__email__,
-    description="zhihu lite client",
+    description="zhlite",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
