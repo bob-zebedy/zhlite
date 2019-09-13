@@ -10,7 +10,7 @@ __license__ = "MIT"
 
 __version__ = "1.8.3"
 __date__ = "2019-09-13"
-__release__ = " 新增导入时检查 js 环境"
+__release__ = "新增导入时检查 js 环境"
 
 __all__ = ["Auth", "User", "Question", "Answer", "Article"]
 
