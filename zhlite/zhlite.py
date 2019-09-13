@@ -92,7 +92,7 @@ class ZhliteBase(object):
     def request(self, api, payloads=None):
         try:
             sleep(0.2)
-            response = self.session.get(api, params=payloads, timeout=10)
+            response = self.session.get(api, params=payloads, timeout=5)
             if response.status_code == 200:
                 return json.loads(response.text, encoding="utf-8")
             elif response.status_code == 410:
@@ -250,24 +250,25 @@ class User(ZhliteBase):
         }
 
         self.info = {
-            "id": "",                                   # 自定义ID
-            "uid": "",                                  # 内部ID
-            "name": "",                                 # 显示名字
-            "gender": self.gendermap[-1],               # 性别 0:女 1:男 -1:未知
-            "employments": "",                          # 职业
-            "educations": "",                           # 教育
-            "locations": "",                            # 地区
-            "avatar": "",                               # 用户头像
-            "headline": "",                             # 个人简介
-            "is_vip": "",                               # 盐选会员
-            "is_org": "",                               # 机构号|个人号
-            "follower_count": "",                       # 关注者数量
-            "following_count": "",                      # 关注的人数量
-            "answer_count": "",                         # 回答数量
-            "question_count": "",                       # 提问数量
-            "article_count": "",                        # 文章数量
-            "voteup_count": "",                         # 获得赞同数量
-            "visit_count": ""                           # 来访者数量
+            "id": "",
+            "uid": "",
+            "name": "",
+            "gender": self.gendermap[-1],
+            "url": "",
+            "employments": "",
+            "educations": "",
+            "locations": "",
+            "avatar": "",
+            "headline": "",
+            "is_vip": "",
+            "is_org": "",
+            "follower_count": "",
+            "following_count": "",
+            "answer_count": "",
+            "question_count": "",
+            "article_count": "",
+            "voteup_count": "",
+            "visit_count": ""
         }
 
         self.__getinfo__()
@@ -306,6 +307,7 @@ class User(ZhliteBase):
                     "name": info["name"],
                     "avatar": info["avatar_url"],
                     "gender": self.gendermap[info["gender"]],
+                    "url": info["url"],
                     "employments": {i.get("company", {}).get("name", ""): i.get("job", {}).get("name", "") for i in info["employments"]},
                     "educations": {i.get("school", {}).get("name", ""): i.get("major", {}).get("name", "") for i in info["educations"]},
                     "locations": [i["name"] for i in info["locations"]],

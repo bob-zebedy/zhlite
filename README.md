@@ -52,6 +52,7 @@ zhlite 是一个知乎的 Python 轻量客户端，全部功能全部采用知�
 | uid | str | 用户ID |
 | name | str | 显示名字 |
 | gender | str | 性别 0:女 1:男 -1:未知 |
+| url | str | 用户url连接 |
 | employments | dict | 职业信息 |
 | educations | dict | 教育信息 |
 | locations | list | 地区信息 |

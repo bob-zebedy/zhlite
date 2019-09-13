@@ -7,9 +7,9 @@ __email__ = "deplives@deplives.com"
 
 __license__ = "MIT"
 
-__version__ = "1.8.1"
-__date__ = "2019-09-06"
-__release__ = " `Answer.images` 和 `Answer.videos` 对象新增 url 方法"
+__version__ = "1.8.2"
+__date__ = "2019-09-13"
+__release__ = " `User` 新增 `url` 属性为用户的url链接"
 
 __all__ = ["Auth", "User", "Question", "Answer", "Article"]
 
