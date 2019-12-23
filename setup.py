@@ -21,7 +21,7 @@ setuptools.setup(
         'beautifulsoup4==4.7.1',
         'lxml==4.3.4',
         'PyExecJS==1.5.1',
-        'Pillow==6.0.0'
+        'Pillow==6.2.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",
