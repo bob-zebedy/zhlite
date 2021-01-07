@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=[
         'requests==2.21.0',
         'beautifulsoup4==4.7.1',
-        'lxml==4.3.4',
+        'lxml==4.6.2',
         'PyExecJS==1.5.1',
         'Pillow==6.2.0'
     ],
